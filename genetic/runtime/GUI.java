@@ -40,7 +40,7 @@ public class GUI extends JFrame implements ActionListener
         this.control = new Control(this.game);
         this.add(this.control);
 
-        this.setSize(2*(this.x*this.resolution), this.y*this.resolution + 100);
+        this.setSize(2*(this.x*this.resolution + 100), this.y*this.resolution + 100);
         this.setTitle("CS 1410 Final Project: Evolution");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(rootPane);
@@ -55,7 +55,13 @@ public class GUI extends JFrame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        this.screen.populateScreen(this.game.world.getTileColors());
+        int[][][] tileColors = this.game.world.getTileColors();
+        this.screen.populateScreenTiles(tileColors);
+
+        int[][] tileCreatureCount = this.game.world.getTileCreatureCount();
+        int[][] tileFoodCount = this.game.world.getTileFoodCount();
+        this.screen.populateScreenObjects(tileCreatureCount, tileFoodCount);
+
         this.screen.refresh();
         
         

@@ -16,9 +16,13 @@ public class Fire extends Element
         super.color = this.color;
     }
 
-    // @Override
-    // public void destruction()
-    // {
-        
-    // }
+    @Override
+    public int destruction(int size)
+    {
+        if (World.generateRandom() < 25)
+        {
+            return World.generateRandom(0, size);
+        }
+        return 0;
+    }
 }

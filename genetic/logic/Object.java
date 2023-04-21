@@ -8,6 +8,7 @@ public class Object
     public String type;
 
     protected int totalHealth;
+    protected int willPower;
     protected int health;
     protected int hunger;
 
@@ -19,6 +20,11 @@ public class Object
     public void roll()
     {
 
+    }
+
+    public boolean move()
+    {
+        return false;
     }
 
 

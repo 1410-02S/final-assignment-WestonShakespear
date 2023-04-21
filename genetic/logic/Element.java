@@ -18,18 +18,14 @@ public class Element {
 
     }
 
-    public List<Object> creation()
+    public Object creation()
     {
-        List<Object> ret = null;
-
-        return ret;
+        return null;
     }
 
-    public List<Object> destruction()
+    public int destruction(int size)
     {
-        List<Object> ret = null;
-
-        return ret;
+        return 0;
     }
     
 }

@@ -4,8 +4,8 @@ import java.util.*;
 
 public class Tile {
     
-    private int x;
-    private int y;
+    public int x;
+    public int y;
 
     public Element element;
     private List<Object> objects;
@@ -68,6 +68,61 @@ public class Tile {
     {
         this.objects.add(object);
         //System.out.printf("    A %s named %s has spawned%n", object.type, object.name);
+    }
+
+
+    // public void removeObjects(List<Object> objects)
+    // {
+    //     for (Object object : objects)
+    //     {
+    //         this.objects.add(object);
+    //     }
+    // }
+
+    public void removeObject(Object object)
+    {
+        this.objects.remove(object);
+        //System.out.printf("    A %s named %s has spawned%n", object.type, object.name);
+    }
+
+    public void removeRandomObject()
+    {
+        int index = World.generateRandom(0, this.objects.size() - 1);
+        Object dead = this.objects.get(index);    
+
+        System.out.printf("    A %s named %s has perished in the fire realm%n", dead.type, dead.name); 
+        this.objects.remove(dead);
+    }
+
+    public void removeRandomObject(int num)
+    {
+        for (int i = 0; i < num; i++)
+        {
+            this.removeRandomObject();
+        }
+    }
+
+    
+
+    public List<Object> moveObjects()
+    {
+        List<Object> ret = new ArrayList<>();
+        //move
+        for(Object object : this.objects)
+        {
+            if (object.move())
+            {
+                ret.add(object);
+            }
+        }
+
+        return ret;
+    }
+
+
+    public List<Object> getObjects()
+    {
+        return this.objects;
     }
 
 

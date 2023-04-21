@@ -5,10 +5,22 @@ public class Creature extends Object
     @Override
     public void generate()
     {
-        super.totalHealth = World.generateRandom(0, 99);
+        super.totalHealth = World.generateRandom();
+        super.willPower = World.generateRandom();
         super.health = 100;
         super.hunger = 0;
 
         super.type = "Bacteria";
+    }
+
+    @Override
+    public boolean move()
+    {
+        if (World.generateRandom() < super.willPower)
+        {
+            return true;
+        }
+        
+        return false;
     }
 }
