@@ -16,9 +16,9 @@ public class Earth extends Element
         super.color = this.color;
     }
 
-    @Override
-    public void creation()
-    {
+    // @Override
+    // public Creature[] creation()
+    // {
 
-    }
+    // }
 }

@@ -66,7 +66,7 @@ public class Screen extends JPanel
         for (int y = 0; y < this.y * this.resolution; y += this.resolution) {
             for (int x = 0; x < this.x * this.resolution; x += this.resolution) {
 
-                int[] color = screen[x / this.resolution][y / this.resolution];
+                int[] color = screen[y / this.resolution][x / this.resolution];
                 temp = new Color(color[0], color[1], color[2]);
 
                 g2d.setColor(temp);

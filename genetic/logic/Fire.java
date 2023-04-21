@@ -16,9 +16,9 @@ public class Fire extends Element
         super.color = this.color;
     }
 
-    @Override
-    public void destruction()
-    {
+    // @Override
+    // public void destruction()
+    // {
         
-    }
+    // }
 }

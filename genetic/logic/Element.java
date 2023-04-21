@@ -1,5 +1,7 @@
 package genetic.logic;
 
+import java.util.*;
+
 public class Element {
     protected int chanceDanger;
     protected int chanceFood;
@@ -16,16 +18,16 @@ public class Element {
 
     }
 
-    public Object[] creation()
+    public List<Object> creation()
     {
-        Object[] ret = null;
+        List<Object> ret = null;
 
         return ret;
     }
 
-    public Object[] destruction()
+    public List<Object> destruction()
     {
-        Object[] ret = null;
+        List<Object> ret = null;
 
         return ret;
     }

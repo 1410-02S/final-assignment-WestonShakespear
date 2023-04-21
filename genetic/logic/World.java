@@ -1,6 +1,11 @@
 package genetic.logic;
 
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.*;
 
 public class World {
 
@@ -16,6 +21,9 @@ public class World {
 
     public boolean generated;
 
+    public List<String> names;
+    public List<String> foods;
+
     public World(int width, int height) {
         System.out.println("this is the world!");
         this.width = width;
@@ -23,7 +31,34 @@ public class World {
 
         this.tiles = new Tile[this.width][this.height];
 
+        this.generateLists();
+    }
 
+
+    private void generateLists()
+    {
+        this.names = new ArrayList<>();
+        this.foods = new ArrayList<>();
+
+        String[] names = this.getFileList("name.txt");
+        if (names != null)
+        {
+            for (String name : names)
+            {
+                this.names.add(name);
+            }
+        }
+
+        String[] foods = this.getFileList("fruit.txt");
+        if (foods != null)
+        {
+            for (String food : foods)
+            {
+                this.foods.add(food);
+            }
+        }
+
+        
     }
 
     public Tile[][] getTiles()
@@ -39,29 +74,45 @@ public class World {
             {
                 this.tiles[y][x] = new Tile(x, y);
                 this.tiles[y][x].element.generate();
+
+                List<Object> intial = this.tiles[y][x].initializeInhabitants();
+                this.created(intial, x, y);
             }
         }
         return this.generated = true;
     }
 
-    public void createCreature(int x, int y)
+    private void created(List<Object> created_list, int x, int y)
     {
-        
+        for (Object created : created_list)
+        {
+            this.created(created, x, y);
+        }
     }
 
-    public void destoryCreature(int x, int y)
+    private void created(Object created, int x, int y)
     {
+        created.generate();
+        created.name = this.getRandomName();
 
+        if (created.type != "Bacteria")
+        {
+            created.type = this.getRandomFood();
+        }
+        this.tiles[y][x].addObject(created);
     }
 
-    public void createFood(int x, int y)
+    private void destroyed(List<Object> destroy_list, int x, int y)
     {
-
+        for (Object destroy : destroy_list)
+        {
+            this.destroyed(destroy, x, y);
+        }
     }
 
-    public void destroyFood(int x, int y)
+    private void destroyed(Object destroyed, int x, int y)
     {
-
+        System.out.println("    A " + destroyed.type + " named " + destroyed.name + " has died");
     }
 
     public static int generateRandom(int lower, int upper)
@@ -69,6 +120,48 @@ public class World {
         int bound = (upper - lower) + 1;
         
         return ThreadLocalRandom.current().nextInt(bound) + lower;
+    }
+
+    private int getRandomIndex(int length)
+    {
+        return ThreadLocalRandom.current().nextInt(length);
+    }
+
+    public String getRandomName()
+    {
+        int a = this.getRandomIndex(this.names.size());
+        return this.names.get(a);
+    }
+
+    public String getRandomFood()
+    {
+        int a = this.getRandomIndex(this.foods.size());
+        return this.foods.get(a);
+    }
+
+    public String[] getFileList(String filename)
+    {
+        Path currentPath = Paths.get(System.getProperty("user.dir"));
+        Path filePath = Paths.get(currentPath.toString(), filename);
+
+        System.out.println(filePath.toString());
+
+        try(BufferedReader in = new BufferedReader(new FileReader(filePath.toString()))) {
+            String str = in.readLine();
+
+            String[] firstSplit = str.split(",");
+
+            for (int i = 0; i < firstSplit.length; i++)
+            {
+                firstSplit[i] = firstSplit[i].replace("\"", "");
+            }
+            return firstSplit;
+        }
+        catch (IOException e) {
+            System.out.println(e.toString());
+        }
+        
+        return null;
     }
 
     public void step()
@@ -80,18 +173,11 @@ public class World {
         {
             for (Tile tileX : tileY)
             {
-                Object[] created = tileX.element.creation();
+                List<Object> created = tileX.element.creation();
+                this.created(created, x, y);
 
-                if (created != null)
-                {
-
-                }
-
-                Object[] destroyed = tileX.element.destruction();
-                if (destroyed != null)
-                {
-
-                }
+                List<Object> destroyed = tileX.element.destruction();
+                this.destroyed(destroyed, x, y);
 
                 x++;
             }
