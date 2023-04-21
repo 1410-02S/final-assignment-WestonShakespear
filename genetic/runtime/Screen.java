@@ -15,8 +15,8 @@ public class Screen extends JPanel
 
     private int[][][] screen;
 
-    private int[][] screenFoods;
-    private int[][] screenCreatures;
+    private int[][][] screenFoods;
+    private int[][][] screenCreatures;
 
     int[] bg = {255, 0, 0};
 
@@ -31,8 +31,8 @@ public class Screen extends JPanel
 
         this.screen = new int[this.y][this.x][3];
 
-        this.screenCreatures = new int[this.y][this.x];
-        this.screenFoods = new int[this.y][this.x];
+        this.screenCreatures = new int[this.y][this.x][];
+        this.screenFoods = new int[this.y][this.x][];
 
         this.initScreen();
     }
@@ -41,11 +41,11 @@ public class Screen extends JPanel
         this.repaint();
     }
 
-    public void populateScreenObjects(int[][] creatureCount, int[][] foodCount) {
+    public void populateScreenObjects(int[][][] creatureColor, int[][][] foodColor) {
         for (int y = 0; y < this.y; y++) {
             for (int x = 0; x < this.x; x++) {
-                this.screenCreatures[y][x] = creatureCount[y][x];
-                this.screenFoods[y][x] = foodCount[y][x];
+                this.screenCreatures[y][x] = creatureColor[y][x];
+                this.screenFoods[y][x] = foodColor[y][x];
             }
         }
     }
@@ -92,19 +92,21 @@ public class Screen extends JPanel
     }
 
     private void drawTileObjects(Graphics2D g2d, int x, int y) {
-        int creatures = this.screenCreatures[y][x];
-        this.drawTileGrid(g2d, this.creatureColor, x, y, creatures, 0);
 
-        int foods = this.screenFoods[y][x];
-        this.drawTileGrid(g2d, this.foodColor, x, y, foods, this.resolution / 2);
+        this.drawTileGrid(g2d, x, y, this.screenCreatures[y][x], 0);
+
+        // int foods = this.screenFoods[y][x];
+        // this.drawTileGrid(g2d, this.foodColor, x, y, foods, this.resolution / 2);
         // System.out.printf("x:%d y:%d   %d", x, y, creatures);
 
         
     }
 
 
-    private void drawTileGrid(Graphics2D g2d, Color color, int x, int y, int amount, int offset)
+    private void drawTileGrid(Graphics2D g2d, int x, int y, int[] colors, int offset)
     {
+        Color temp;
+
         int baseX = x * this.resolution;
         int baseY = y * this.resolution + offset;
 
@@ -115,9 +117,12 @@ public class Screen extends JPanel
         int cX = baseX;
         int cY = baseY;
 
-        for (int i = 0; i < amount; i++)
+        if (colors != null)
         {
-            g2d.setColor(color);
+            for (int i = 0; i < colors.length; i++)
+        {
+            temp = new Color(colors[i], colors[i], colors[i]);
+            g2d.setColor(temp);
             
             g2d.fillRect(cX, cY, size, size);
             cX += size + pad;
@@ -128,6 +133,8 @@ public class Screen extends JPanel
                 cX = baseX;
             }
         }
+        }
+        
     }
 
     private void doDrawing(Graphics g) {

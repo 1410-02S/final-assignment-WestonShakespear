@@ -11,7 +11,9 @@ public class Earth extends Element
     {
         super.chanceDanger = 20;
         super.chanceFood = 60;
-        super.chanceLife = 80;
+        super.chanceLife = 40;
+
+        super.initStats();
 
         super.name = "Earth";
 
@@ -21,7 +23,7 @@ public class Earth extends Element
     @Override
     public Object creation()
     {
-        if (World.generateRandom() < 50) {
+        if (World.generateRandom() < super.life) {
             return new Creature();
         }
         return null;

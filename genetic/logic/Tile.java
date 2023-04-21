@@ -6,6 +6,7 @@ public class Tile {
     
     public int x;
     public int y;
+    private int max;
 
     public Element element;
     private List<Object> objects;
@@ -16,10 +17,11 @@ public class Tile {
 
     
 
-    public Tile(int x, int y)
+    public Tile(int x, int y, int max)
     {
         this.x = x;
         this.y = y;
+        this.max = max;
 
         this.createType();
 
@@ -49,9 +51,9 @@ public class Tile {
         int life = World.generateRandom(0, 99);
         int food = World.generateRandom(0, 99);
 
-        if (life < element.chanceLife) created.add(new Creature());
+        if (life < element.life) created.add(new Creature());
 
-        if (food < element.chanceFood) created.add(new Food());
+        //if (food < element.food) created.add(new Food());
 
         return created;
     }
@@ -67,22 +69,11 @@ public class Tile {
     public void addObject(Object object)
     {
         this.objects.add(object);
-        //System.out.printf("    A %s named %s has spawned%n", object.type, object.name);
     }
-
-
-    // public void removeObjects(List<Object> objects)
-    // {
-    //     for (Object object : objects)
-    //     {
-    //         this.objects.add(object);
-    //     }
-    // }
 
     public void removeObject(Object object)
     {
         this.objects.remove(object);
-        //System.out.printf("    A %s named %s has spawned%n", object.type, object.name);
     }
 
     public void removeRandomObject()
@@ -102,6 +93,27 @@ public class Tile {
         }
     }
 
+    public List<Object> reproduction()
+    {
+        int creatureCount = this.getObjectCount(true);
+
+        List<Object> born = new ArrayList<>();
+
+        if (creatureCount > this.max)
+        {
+            this.removeRandomObject(this.max);
+            return born;
+        }
+
+        for (int i = 0; i < (creatureCount % 2); i++)
+        {
+            int chance = World.generateRandom();
+            if (chance < this.element.chanceLife) { born.add(new Creature()); }    
+        }
+
+        return born;
+    }
+
     
 
     public List<Object> moveObjects()
@@ -113,6 +125,43 @@ public class Tile {
             if (object.move())
             {
                 ret.add(object);
+            }
+        }
+
+        return ret;
+    }
+
+    public int[] getObjectColors(boolean creatures)
+    {
+        List<Object> objs = new ArrayList<>();
+
+        for (Object object : this.objects)
+        {
+            if (object.type == "Bacteria" && creatures)
+            {
+                objs.add(object);
+            }
+        }
+
+        int[] ret = new int[objs.size()];
+
+        for (int i = 0; i < objs.size(); i++)
+        {
+            ret[i] = objs.get(i).getColorValue();
+        }
+
+        return ret;
+    }
+
+    public int getObjectCount(boolean creatures)
+    {
+        int ret = 0;
+
+        for (Object object : this.objects)
+        {
+            if (object.type == "Bacteria" && creatures)
+            {
+                ret += 1;
             }
         }
 

@@ -1,15 +1,14 @@
 package genetic.runtime;
 
 import genetic.logic.World;
-import genetic.logic.Tile;
 
 public class Instance
 {
     public World world;
 
-    public Instance(int width, int height)
+    public Instance(int width, int height, int max)
     {
-        this.world = new World(width, height);
+        this.world = new World(width, height, max);
     }
 
     public void start()
@@ -26,11 +25,14 @@ public class Instance
     {
         String[] ret;
 
-        if (args.length != 3) {
-            ret = new String[3];
-            ret[1] = "8";
-            ret[2] = "8";
+        if (args.length != 4) {
+            ret = new String[4];
+            ret[0] = "24";
+            ret[1] = "24";
+            ret[2] = "50";
+            ret[3] = "20";
         } else {
+            System.out.println("accepted");
             ret = args;
         }
 

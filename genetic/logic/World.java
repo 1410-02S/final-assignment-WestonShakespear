@@ -9,13 +9,16 @@ import java.nio.file.*;
 
 public class World {
 
+    // Amount of tiles in X and Y
     private int width;
     private int height;
 
+    // Slider values for environment
     private int birth;
     private int death;
     private int food;
-    private int waste;
+
+    private int max;
 
     private Tile[][] tiles;
 
@@ -24,10 +27,11 @@ public class World {
     public List<String> names;
     public List<String> foods;
 
-    public World(int width, int height) {
+    public World(int width, int height, int max) {
         System.out.println("this is the world!");
         this.width = width;
         this.height = height;
+        this.max = max;
 
         this.tiles = new Tile[this.width][this.height];
 
@@ -39,7 +43,15 @@ public class World {
         this.birth = birth;
         this.death = death;
         this.food = food;
-        this.waste = waste;
+
+        for (Tile[] tileY : this.tiles)
+        {
+            for (Tile tileX : tileY)
+            {
+                tileX.element.updateStats(this.birth, this.death, this.food);
+            }
+        }
+
     }
 
     public Tile[][] getTiles()
@@ -53,7 +65,7 @@ public class World {
         {
             for (int x = 0; x < this.width; x++)
             {
-                this.tiles[y][x] = new Tile(x, y);
+                this.tiles[y][x] = new Tile(x, y, max);
                 this.tiles[y][x].element.generate();
 
                 List<Object> intial = this.tiles[y][x].initializeInhabitants();
@@ -70,17 +82,22 @@ public class World {
         {
             for (Tile tileX : tileY)
             {
+                // random creation
                 Object created = tileX.element.creation();
                 if (created != null)
                 {
                     this.created(created, tileX.x, tileX.y);
-                    System.out.println("spontanious");
                 }
                 
-
+                // move all creatures
                 List<Object> moved = tileX.moveObjects();
                 this.moved(moved, tileX.x, tileX.y);
 
+                // creature reproduction
+                List<Object> born = tileX.reproduction();
+                this.created(born, tileX.x, tileX.y);
+
+                // random destruction
                 int destroyed = tileX.element.destruction(tileX.getObjects().size());
                 this.destroyed(destroyed, tileX.x, tileX.y);
 
@@ -147,24 +164,7 @@ public class World {
 
         this.tiles[y][x].removeObject(moved);
         this.tiles[nY][nX].addObject(moved);
-
-        //System.out.printf("    A %s named %s has moved%d%n%n%n", moved.type, moved.name, dir);
     }
-
-    
-
-    private void destroyed(Object destroyed, int x, int y)
-    {
-        System.out.printf("    A %s named %s has died%n", destroyed.type, destroyed.name);
-    }
-
-    
-
-    
-
-    
-
-    
     
 
 
@@ -185,23 +185,15 @@ public class World {
     }
 
     // Accessed by the screen for drawing creatures
-    public int[][] getTileCreatureCount()
+    public int[][][] getTileCreatureColor()
     {
-        int[][] creatures = new int[this.width][this.height];
+        int[][][] creatures = new int[this.width][this.height][];
 
         for (Tile[] tileY : this.tiles)
         {
             for (Tile tileX : tileY)
             {
-                List<Object> tileObjects = tileX.getObjects();
-                for (int i = 0; i < tileObjects.size(); i++)
-                {
-                    if (tileObjects.get(i).type == "Bacteria")
-                    {
-                        creatures[tileX.y][tileX.x] += 1;
-                    }
-                }
-                
+                creatures[tileX.y][tileX.x] = tileX.getObjectColors(true);
             }
         }
 
@@ -209,23 +201,15 @@ public class World {
     }
 
     // Accessed by the screen for drawing food
-    public int[][] getTileFoodCount()
+    public int[][][] getTileFoodColor()
     {
-        int[][] creatures = new int[this.width][this.height];
+        int[][][] creatures = new int[this.width][this.height][];
 
         for (Tile[] tileY : this.tiles)
         {
             for (Tile tileX : tileY)
             {
-                List<Object> tileObjects = tileX.getObjects();
-                for (int i = 0; i < tileObjects.size(); i++)
-                {
-                    if (tileObjects.get(i).type != "Bacteria")
-                    {
-                        creatures[tileX.y][tileX.x] += 1;
-                    }
-                }
-                
+                creatures[tileX.y][tileX.x] = tileX.getObjectColors(false); 
             }
         }
 

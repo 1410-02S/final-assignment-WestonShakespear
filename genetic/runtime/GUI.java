@@ -58,8 +58,8 @@ public class GUI extends JFrame implements ActionListener
         int[][][] tileColors = this.game.world.getTileColors();
         this.screen.populateScreenTiles(tileColors);
 
-        int[][] tileCreatureCount = this.game.world.getTileCreatureCount();
-        int[][] tileFoodCount = this.game.world.getTileFoodCount();
+        int[][][] tileCreatureCount = this.game.world.getTileCreatureColor();
+        int[][][] tileFoodCount = this.game.world.getTileFoodColor();
         this.screen.populateScreenObjects(tileCreatureCount, tileFoodCount);
 
         this.screen.refresh();
@@ -88,12 +88,16 @@ public class GUI extends JFrame implements ActionListener
 
     public static void main(String[] args)
     {
+        System.out.println("args: "+ args.length);
         String[] checkedArgs = Instance.checkArgs(args);
-        int x = Integer.parseInt(checkedArgs[1]);
-        int y = Integer.parseInt(checkedArgs[2]);
-        int res = 100;
+        int x = Integer.parseInt(checkedArgs[0]);
+        int y = Integer.parseInt(checkedArgs[1]);
+        int res = Integer.parseInt(checkedArgs[2]);
+        int max = Integer.parseInt(checkedArgs[3]);
 
-        Instance game = new Instance(x, y);
+        System.out.printf("%d%d%d%d%n", x, y, res, max);
+
+        Instance game = new Instance(x, y, max);
 
         SwingUtilities.invokeLater(new Runnable() {
 

@@ -11,6 +11,8 @@ public class Creature extends Object
         super.hunger = 0;
 
         super.type = "Bacteria";
+
+        this.initColor();
     }
 
     @Override
@@ -20,7 +22,7 @@ public class Creature extends Object
         {
             return true;
         }
-        
+
         return false;
     }
 }

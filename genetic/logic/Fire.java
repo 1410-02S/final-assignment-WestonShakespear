@@ -7,7 +7,7 @@ public class Fire extends Element
     @Override
     public void generate()
     {
-        super.chanceDanger = 90;
+        super.chanceDanger = 100;
         super.chanceFood = 0;
         super.chanceLife = 5;
 
@@ -19,7 +19,7 @@ public class Fire extends Element
     @Override
     public int destruction(int size)
     {
-        if (World.generateRandom() < 25)
+        if (World.generateRandom() < super.danger)
         {
             return World.generateRandom(0, size);
         }
