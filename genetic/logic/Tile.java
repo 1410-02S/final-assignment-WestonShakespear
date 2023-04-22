@@ -105,10 +105,16 @@ public class Tile {
             return born;
         }
 
-        for (int i = 0; i < (creatureCount % 2); i++)
+        for (int i = 0; i < creatureCount; i += 2)
         {
             int chance = World.generateRandom();
-            if (chance < this.element.chanceLife) { born.add(new Creature()); }    
+            if (chance < this.element.chanceLife)
+            {
+                Creature creature = new Creature();
+                creature.generate();
+                creature.setColor(this.objects.get(i).color);
+                born.add(new Creature());
+            }    
         }
 
         return born;

@@ -13,6 +13,8 @@ public class Object
     protected int health;
     protected int hunger;
 
+    protected boolean generated;
+
 
 
     public void generate()
@@ -42,6 +44,11 @@ public class Object
         {
             this.color += World.generateRandom(0, 1);
         }
+    }
+
+    public void setColor(String color)
+    {
+        this.color = color;
     }
 
 

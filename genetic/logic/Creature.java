@@ -5,14 +5,19 @@ public class Creature extends Object
     @Override
     public void generate()
     {
-        super.totalHealth = World.generateRandom();
-        super.willPower = World.generateRandom();
-        super.health = 100;
-        super.hunger = 0;
+        if (!super.generated)
+        {
+            super.generated = true;
+            super.totalHealth = World.generateRandom();
+            super.willPower = World.generateRandom();
+            super.health = 100;
+            super.hunger = 0;
 
-        super.type = "Bacteria";
+            super.type = "Bacteria";
 
-        this.initColor();
+            this.initColor();
+        }
+        
     }
 
     @Override
